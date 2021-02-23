@@ -17,7 +17,8 @@ public class MakeUtils {
     private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
     private static final String XML_RESOURCE_START = "<resources>\r\n";
     private static final String XML_RESOURCE_END = "</resources>\r\n";
-    private static final String XML_DIMEN_TEMPLETE = "<dimen name=\"qb_%1$spx_%2$d\">%3$.2fdp</dimen>\r\n";
+    private static final String XML_DIMEN_TEMPLETE = "<dimen name=\"dp%1$d\">%2$.2fdp</dimen>\r\n";
+    private static final String XML_NEGATIVE_DIMEN_TEMPLETE = "<dimen name=\"ndp%1$d\">%2$.2fdp</dimen>\r\n";
 
    
     private static final String XML_BASE_DPI = "<dimen name=\"base_dpi\">%ddp</dimen>\r\n";
@@ -53,11 +54,16 @@ public class MakeUtils {
             //备份生成的相关信息
             temp = String.format(XML_BASE_DPI, type.getSwWidthDp());
             sb.append(temp);
-            for (int i = 0; i <= MAX_SIZE; i++) {
-            	
-                dpValue = px2dip((float) i,type.getSwWidthDp(),designWidth);
-                temp = String.format(XML_DIMEN_TEMPLETE,"", i, dpValue);
-                sb.append(temp);
+            for (int i = -80; i <= MAX_SIZE; i++) {
+            	if (i<0){
+                    dpValue = px2dip((float) i, type.getSwWidthDp(), designWidth);
+                    temp = String.format(XML_NEGATIVE_DIMEN_TEMPLETE, Math.abs(i), dpValue);
+                    sb.append(temp);
+                }else {
+                    dpValue = px2dip((float) i, type.getSwWidthDp(), designWidth);
+                    temp = String.format(XML_DIMEN_TEMPLETE, i, dpValue);
+                    sb.append(temp);
+                }
             }
 
 
